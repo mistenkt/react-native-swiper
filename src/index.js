@@ -5,6 +5,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import {
+  Animated,
   Text,
   View,
   ViewPropTypes,
@@ -140,6 +141,7 @@ export default class extends Component {
     activeDotStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
     dotColor: PropTypes.string,
     activeDotColor: PropTypes.string,
+    animatedScrollView: PropTypes.bool,
     /**
      * Called when the index has changed because the user swiped.
      */
@@ -169,6 +171,7 @@ export default class extends Component {
     autoplay: false,
     autoplayTimeout: 2.5,
     autoplayDirection: true,
+    animatedScrollView: false,
     index: 0,
     onIndexChanged: () => null
   }
@@ -621,8 +624,10 @@ export default class extends Component {
 
   renderScrollView = pages => {
     if (Platform.OS === 'ios') {
+      const IosScrollView = this.props.animatedScrollView ? Animated.ScrollView : ScrollView
+
       return (
-        <ScrollView ref={this.refScrollView}
+        <IosScrollView ref={this.refScrollView}
           {...this.props}
           {...this.scrollViewPropOverrides()}
           contentContainerStyle={[styles.wrapperIOS, this.props.style]}
@@ -632,7 +637,7 @@ export default class extends Component {
           onScrollEndDrag={this.onScrollEndDrag}
           style={this.props.scrollViewStyle}>
           {pages}
-        </ScrollView>
+        </IosScrollView>
        )
     }
     return (
